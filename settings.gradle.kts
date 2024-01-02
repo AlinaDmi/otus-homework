@@ -3,6 +3,7 @@ include("L01-gradle")
 include("L04")
 include("L06-annotations")
 include("L08-GC")
+include("L12-SOLID")
 
 
 pluginManagement {
@@ -26,4 +27,3 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-include("L08-GC")

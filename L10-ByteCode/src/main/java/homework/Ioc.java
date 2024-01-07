@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,20 +18,27 @@ class Ioc {
     private Ioc() {
     }
 
-    static CalculatorInterface createCalculator() {
-        InvocationHandler handler = new CalculatorInvocationHandler(new Calculator());
-        return (CalculatorInterface)
-                Proxy.newProxyInstance(Ioc.class.getClassLoader(), new Class<?>[]{CalculatorInterface.class}, handler);
+    static Object createClass(Class<?> clazzImpl, Class<?> classInterface) {
+        InvocationHandler handler = null;
+
+        try {
+            handler = new MyInvocationHandler(clazzImpl.getDeclaredConstructor().newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Error");
+        }
+
+        return Proxy.newProxyInstance(Ioc.class.getClassLoader(), new Class<?>[]{classInterface}, handler);
     }
 
-    static class CalculatorInvocationHandler implements InvocationHandler {
-        private final Calculator calculator;
+    static class MyInvocationHandler implements InvocationHandler {
+        private final Object myClass;
         private final List<Method> loggingMethods;
 
-        CalculatorInvocationHandler(Calculator calculator) {
-            this.calculator = calculator;
+        MyInvocationHandler(Object object) {
+            this.myClass = object;
             this.loggingMethods = new ArrayList<>(Arrays
-                    .stream(calculator.getClass().getDeclaredMethods())
+                    .stream(object.getClass().getDeclaredMethods())
                     .filter(m -> m.isAnnotationPresent(Log.class))
                     .toList());
         }
@@ -43,7 +50,7 @@ class Ioc {
                 logger.info("executing method: {}, params: {}", method.getName(), Arrays.stream(args).map(Object::toString)
                         .collect(Collectors.joining(", ")));
             }
-            return method.invoke(calculator, args);
+            return method.invoke(myClass, args);
         }
 
         private boolean isMethodForLogging(Method method, Class<?>[] parameters) {
@@ -51,7 +58,7 @@ class Ioc {
                 if (!method.getName().equals(logMethod.getName()) || !method.getReturnType().equals(logMethod.getReturnType())) {
                     continue;
                 }
-                if (equalParamTypes(logMethod.getParameterTypes(), parameters)){
+                if (equalParamTypes(logMethod.getParameterTypes(), parameters)) {
                     return true;
                 }
 
@@ -72,7 +79,7 @@ class Ioc {
 
         @Override
         public String toString() {
-            return "DemoInvocationHandler{" + "myClass=" + calculator + '}';
+            return "DemoInvocationHandler{" + "myClass=" + myClass + '}';
         }
     }
 

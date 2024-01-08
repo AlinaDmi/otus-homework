@@ -27,4 +27,5 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+include("L16-Serialization")
 include("L10-ByteCode")

@@ -31,11 +31,11 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
     private final Class<T> entityClass;
     private final MyCache<Long, T> cache;
 
-    public DataTemplateJdbc(DbExecutor dbExecutor, EntitySQLMetaData<T> entitySQLMetaData, Class<T> entityClass) {
+    public DataTemplateJdbc(DbExecutor dbExecutor, EntitySQLMetaData<T> entitySQLMetaData, Class<T> entityClass, MyCache<Long, T> cache) {
         this.dbExecutor = dbExecutor;
         this.entitySQLMetaData = entitySQLMetaData;
         this.entityClass = entityClass;
-        this.cache = new MyCache<>();
+        this.cache = cache;
     }
 
     @Override
@@ -73,8 +73,6 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                     T entity = mapResultSetToEntity(resultSet);
                     if (entity != null) {
                         resultList.add(entity);
-                        // Сохраняем полученные данные в кэше
-                        cache.put(getIdFromEntity(entity), entity);
                     }
                 }
                 return resultList;
@@ -100,7 +98,6 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
         String sql = entitySQLMetaData.getUpdateSql();
         try {
             dbExecutor.executeStatement(connection, sql, getValuesWithIdForUpdate(entity));
-            cache.remove(getIdFromEntity(entity));
             cache.put(getIdFromEntity(entity),entity);
         } catch (Exception e) {
             throw new DataTemplateException(e);

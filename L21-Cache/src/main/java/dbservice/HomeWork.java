@@ -1,5 +1,6 @@
 package dbservice;
 
+import cachehw.MyCache;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class HomeWork {
         EntityClassMetaData<Client> entityClassMetaDataClient = new EntityClassMetaDataImpl<>(Client.class);
         EntitySQLMetaData<Client> entitySQLMetaDataClient = new EntitySQLMetaDataImpl<>(entityClassMetaDataClient);
         var dataTemplateClient = new DataTemplateJdbc<>(
-                dbExecutor, entitySQLMetaDataClient, Client.class); // реализация DataTemplate, универсальная
+                dbExecutor, entitySQLMetaDataClient, Client.class, new MyCache<>()); // реализация DataTemplate, универсальная
 
         // Выполняем разные операции
         var dbServiceClient = new DbServiceClientImpl(transactionRunner, dataTemplateClient);

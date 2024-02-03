@@ -5,6 +5,10 @@ include("L06-annotations")
 include("L08-GC")
 include("L12-SOLID")
 include("L15-Patterns")
+include("L16-Serialization")
+include("L10-ByteCode")
+include("L18-JDBC")
+include("L21-Cache")
 
 pluginManagement {
     val jgitver: String by settings
@@ -27,6 +31,3 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-include("L16-Serialization")
-include("L10-ByteCode")
-include("L18-JDBC")

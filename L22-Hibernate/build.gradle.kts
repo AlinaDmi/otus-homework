@@ -17,3 +17,12 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 }
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging.showExceptions = true
+    reports {
+        junitXml.required.set(true)
+        html.required.set(true)
+    }
+}

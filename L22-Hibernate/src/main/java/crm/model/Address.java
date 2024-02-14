@@ -27,6 +27,11 @@ public class Address {
     private Client client;
 
     public Address(Long id, String street) {
+        this.id = id;
         this.street = street;
+    }
+
+    public Address copy() {
+        return new Address(this.id, this.street);
     }
 }

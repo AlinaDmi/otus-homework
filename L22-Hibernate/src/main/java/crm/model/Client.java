@@ -48,8 +48,8 @@ public class Client implements Cloneable {
     public Client(Long id, String name, Address address, List<Phone> phones) {
         this.name = name;
         this.id = id;
-        this.address = address;
-        this.phones = phones;
+        this.address = address != null ? address.copy() : address;
+        this.phones = new ArrayList<>(phones);
         initializePhonesClientRelationship();
         initializeAddressClientRelationship();
     }

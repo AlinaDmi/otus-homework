@@ -10,7 +10,7 @@ include("L10-ByteCode")
 include("L18-JDBC")
 include("L21-Cache")
 include("L22-Hibernate")
-
+include("L25-IOC")
 
 pluginManagement {
     val jgitver: String by settings

@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клиенты</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", getClients);
+        document.addEventListener('clientAdded', getClients);
+
+         function getClients() {
+             const clientsContainer = document.getElementById('clientsContainer');
+             clientsContainer.innerHTML = '';
+
+             // Запрашиваем список клиентов с сервера
+             fetch('/api/client')
+                 .then(response => response.json())
+                 .then(clients => {
+                    // Создаем таблицу и заголовок
+                    const table = document.createElement('table');
+                    const headerRow = table.insertRow(0);
+
+                    // Добавляем заголовки
+                    Object.keys(clients[0]).forEach(key => {
+                        const headerCell = document.createElement('th');
+                        headerCell.textContent = key;
+                        headerRow.appendChild(headerCell);
+                    });
+
+                    // Добавляем данные
+                    clients.forEach(client => {
+                        const row = table.insertRow();
+                        Object.values(client).forEach(value => {
+                            const cell = row.insertCell();
+                            cell.textContent = value || ''; // Обработка null значений
+                        });
+                    });
+
+                    // Добавляем таблицу в контейнер
+                    clientsContainer.appendChild(table);
+                })
+                .catch(error => {
+                    console.error('Error fetching clients:', error);
+                });
+        }
+
+          function addClient() {
+              const name = document.getElementById('name').value;
+              const address = document.getElementById('address').value;
+              const phone = document.getElementById('phone').value;
+
+              // Отправляем запрос на сервер для добавления нового клиента
+              fetch('api/client', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      name: name,
+                      address: address,
+                      phone: phone,
+                  }),
+              })
+              .then(response => {
+                  if (response.ok) {
+                    alert('Клиент успешно добавлен!');
+                    getClients();
+                  } else {
+                     console.error('Error adding client:', response.statusText);
+                  }
+              })
+          }
+    </script>
+</head>
+<body>
+<h2>Добавить нового клиента</h2>
+<label for="name">Имя:</label>
+<input type="text" id="name" name="name"><br>
+
+<label for="address">Адрес:</label>
+<input type="text" id="address" name="address"><br>
+
+<label for="phone">Телефон:</label>
+<input type="text" id="phone" name="phone"><br>
+
+<button onclick="addClient()">Добавить клиента</button>
+<button onclick="getClients()">Загрузить клиентов</button>
+
+<h2>Список клиентов</h2>
+
+<div id="clientsContainer"></div>
+
+</body>
+</html>

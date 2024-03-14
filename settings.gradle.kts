@@ -34,3 +34,4 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+include("L32-Queues")

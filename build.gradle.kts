@@ -33,6 +33,9 @@ allprojects {
     val protobufBom: String by project
     val guava: String by project
     val reflections: String by project
+    val jetty: String by project
+    val jettyServlet: String by project
+    val freemarker: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -44,6 +47,14 @@ allprojects {
             }
             dependency("com.google.guava:guava:$guava")
             dependency("org.reflections:reflections:$reflections")
+            dependency("org.eclipse.jetty.ee10:jetty-ee10-servlet:$jetty")
+            dependency("org.eclipse.jetty:jetty-server:$jetty")
+            dependency("org.eclipse.jetty.ee10:jetty-ee10-webapp:$jetty")
+            dependency("org.eclipse.jetty:jetty-security:$jetty")
+            dependency("org.eclipse.jetty:jetty-http:$jetty")
+            dependency("org.eclipse.jetty:jetty-io:$jetty")
+            dependency("org.eclipse.jetty:jetty-util:$jetty")
+            dependency("org.freemarker:freemarker:$freemarker")
         }
     }
 }

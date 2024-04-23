@@ -12,6 +12,8 @@ include("L21-Cache")
 include("L22-Hibernate")
 include("L24-Web")
 include("L25-IOC")
+include("L31-Executors")
+include("L32-Queues")
 
 pluginManagement {
     val jgitver: String by settings
@@ -34,4 +36,3 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-include("L31-Executors")

@@ -17,8 +17,8 @@ public class Main {
         int last = 0;
         for (int i = 1; i < 20; i++) {
             try {
-                while ((isFirstWritingNow && !isFirst) || (!isFirstWritingNow && isFirst)) {
-                    this.wait();
+                while (!isFirstWritingNow != isFirst) {
+                    wait();
                 }
 
                 logger.info("Thread {}: {}", threadName, last >= 10 ? 19 - last : i);

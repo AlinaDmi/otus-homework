@@ -6,7 +6,6 @@ import crm.model.Phone;
 import ru.otus.model.ClientDto;
 
 import java.util.List;
-
 public class ClientWebConverter {
 
     public ClientDto toDto(Client client){

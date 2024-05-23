@@ -10,9 +10,3 @@ create table address
     client_id bigserial not null primary key references client (id)
 );
 
-create table box
-(
-    id   bigserial not null primary key,
-    name varchar(50)
-);
-

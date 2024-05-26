@@ -6,7 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.otus.db.ClientService;
+import ru.otus.db.Client;
+import ru.otus.service.ClientService;
 
 import java.util.List;
 
@@ -15,23 +16,27 @@ import java.util.List;
 public class ClientViewController {
 
     private final ClientService clientService;
+    private final ClientWebConverter clientWebConverter;
 
     @Autowired
-    public ClientViewController(ClientService clientService) {
+    public ClientViewController(ClientService clientService, ClientWebConverter clientWebConverter) {
         this.clientService = clientService;
+        this.clientWebConverter = clientWebConverter;
     }
 
     @GetMapping
     public String showClientPage(Model model) {
-        List<ClientDto> clients = clientService.getAll();
-        model.addAttribute("clients", clients);
+        List<Client> all = clientService.getAll();
+        List<ClientDto> clientDtos = clientWebConverter.toDtoList(all);
+        model.addAttribute("clients", clientDtos);
         model.addAttribute("newClient", new ClientDto());
         return "client-management";
     }
 
     @PostMapping("/add")
     public String addClient(ClientDto clientDto) {
-        clientService.saveClient(clientDto);
+        Client client = clientWebConverter.fromDto(clientDto);
+        clientService.saveClient(client);
         return "redirect:/clients";
     }
 }

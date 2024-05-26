@@ -1,10 +1,12 @@
 package ru.otus.web;
 
+import org.springframework.stereotype.Service;
 import ru.otus.db.Address;
 import ru.otus.db.Client;
 
 import java.util.List;
 
+@Service
 public class ClientWebConverter {
 
     public ClientDto toDto(Client client){

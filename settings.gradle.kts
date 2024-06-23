@@ -37,3 +37,5 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+include("L33-grpc")
+include("BotDemo")

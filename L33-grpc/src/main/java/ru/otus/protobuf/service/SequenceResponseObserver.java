@@ -1,13 +1,16 @@
 package ru.otus.protobuf.service;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.protobuf.SequenceResponse;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SequenceResponseObserver implements StreamObserver<SequenceResponse> {
-    private int lastValueFromServer = 0;
-    private int currentValue = 0;
+    private static final Logger logger = LoggerFactory.getLogger(SequenceResponseObserver.class);
+    private final AtomicInteger lastValueFromServer = new AtomicInteger(0);
     private final CountDownLatch latch;
 
     public SequenceResponseObserver(CountDownLatch latch) {
@@ -16,12 +19,12 @@ public class SequenceResponseObserver implements StreamObserver<SequenceResponse
 
     @Override
     public void onNext(SequenceResponse value) {
-        lastValueFromServer = value.getValue();
+        lastValueFromServer.set(value.getValue());
     }
 
     @Override
     public void onError(Throwable t) {
-        t.printStackTrace();
+        logger.error("Error occurred", t);
         latch.countDown();
     }
 
@@ -30,17 +33,7 @@ public class SequenceResponseObserver implements StreamObserver<SequenceResponse
         latch.countDown();
     }
 
-    public void runClientLogic() {
-        for (int i = 0; i <= 50; i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            currentValue += lastValueFromServer + 1;
-            System.out.println("Current Value: " + currentValue);
-            lastValueFromServer = 0;
-        }
+    public int getLastValueFromServer() {
+        return lastValueFromServer.getAndSet(0);
     }
 }
-

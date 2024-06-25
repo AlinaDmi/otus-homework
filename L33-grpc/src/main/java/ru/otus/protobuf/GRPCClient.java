@@ -2,6 +2,7 @@ package ru.otus.protobuf;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import ru.otus.protobuf.client.ClientLogic;
 import ru.otus.protobuf.service.SequenceResponseObserver;
 
 import java.util.concurrent.CountDownLatch;
@@ -27,7 +28,8 @@ public class GRPCClient {
 
         asyncStub.generateSequence(request, responseObserver);
 
-        responseObserver.runClientLogic();
+        ClientLogic clientLogic = new ClientLogic(responseObserver);
+        clientLogic.run();
 
         latch.await(1, TimeUnit.MINUTES);
         channel.shutdown();

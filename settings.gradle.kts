@@ -39,3 +39,8 @@ pluginManagement {
 }
 include("L33-grpc")
 include("BotDemo")
+include("L38-webflux")
+include("L38-webflux:client")
+findProject(":L38-webflux:client")?.name = "client"
+include("L38-webflux:datastore")
+findProject(":L38-webflux:datastore")?.name = "datastore"
